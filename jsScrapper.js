@@ -12,10 +12,11 @@ const puppeteer = require('puppeteer');
             url: link.href
         }))
     );
+    // #\36 110961345 > div:nth-child(4) > div > span
     // #\36 110957361 > div:nth-child(5) > div > span
     // #\36 110959181 > div:nth-child(3) > div > span
     // #\33 2aef38d-0065-11ee-b75a-f654cad4d416 > div.ooa-14ryoaz.e189ctmp4 > div.evg565y10.ooa-dsk6y6.er34gjf0 > span
-    const prices = await page.$$eval('div:nth-child(3) > div > span', prices =>
+    const prices = await page.$$eval('div:nth-child(n) > div > span', prices =>
         prices.map(price => parseFloat(price.textContent.replace(/\s/g, '')))
     );
 

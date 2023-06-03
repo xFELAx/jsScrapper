@@ -5,22 +5,18 @@ const puppeteer = require('puppeteer');
     const page = await browser.newPage();
     await page.goto('https://www.otomoto.pl/osobowe/nowe?search%5Border%5D=created_at_first%3Adesc');
 
-
-    const cars = await page.$$eval('div.ooa-1cq16zj.evg565y15 > h2 > a', links =>
+    const cars = await page.$$eval('div.ooa-1cq16zj.evg565y15 > h2.evg565y6.evg565y20.ooa-10p8u4x.er34gjf0 > a', links =>
         links.map(link => ({
             name: link.textContent.trim(),
             url: link.href
         }))
     );
-    // #\36 110961345 > div:nth-child(4) > div > span
-    // #\36 110957361 > div:nth-child(5) > div > span
-    // #\36 110959181 > div:nth-child(3) > div > span
-    // #\33 2aef38d-0065-11ee-b75a-f654cad4d416 > div.ooa-14ryoaz.e189ctmp4 > div.evg565y10.ooa-dsk6y6.er34gjf0 > span
-    const prices = await page.$$eval('div:nth-child(n) > div > span', prices =>
+
+    const prices = await page.$$eval('span.ooa-1bmnxg7.evg565y11', prices =>
         prices.map(price => parseFloat(price.textContent.replace(/\s/g, '')))
     );
 
-    const volumes = await page.$$eval('div.ooa-1cq16zj.evg565y15 > div > ul > li:nth-child(3)', volumes =>
+    const volumes = await page.$$eval('div.ooa-1cq16zj.evg565y15 > div > ul > li:nth-child(3).ooa-1k7nwcr.e19ivbs0', volumes =>
         volumes.map(volume => parseInt(volume.textContent.replace(/\s/g, '')))
     );
 
@@ -29,7 +25,7 @@ const puppeteer = require('puppeteer');
         price: prices[index],
         volume: volumes[index],
         cost: prices[index] / volumes[index] / 1000
-    }));
+    })).filter(result => result.volume !== undefined && result.volume !== null);
 
     const sortedResults = results.sort((a, b) => a.cost - b.cost);
 
